@@ -5,11 +5,13 @@ import android.animation.ObjectAnimator
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.app.AlertDialog
+import android.app.Notification
 import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Build
 import android.os.RemoteException
+import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -26,6 +28,7 @@ import org.altbeacon.beacon.RangeNotifier
 class MainActivity : AppCompatActivity(), BeaconConsumer {
     private var beaconManager: BeaconManager? = null
     private val PERMISSION_REQUEST_COARSE_LOCATION = 1
+    private var coffeeAlertDisplayed = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,45 +108,54 @@ class MainActivity : AppCompatActivity(), BeaconConsumer {
 
     fun updateDistance(distance: Double){
 
+        if(distance < 2.0 && !coffeeAlertDisplayed){
+            coffeeAlertDisplayed = true;
+            val noti = NotificationCompat.Builder(this)
+                    .setContentTitle("FREE COFFEE")
+                    .setContentText("You lucky thing - you've won a free coffee. Press the button on the machine for a delicious cup of Joe (but do put a cup in place first).")
+                    .setSmallIcon(R.drawable.ic_local_cafe_black_24dp)
+                    .build()
+        }
+
         if(distance > 10.0){
             coffeeProgressBar.visibility = View.INVISIBLE
             setProgressBarPercentage(coffeeProgressBar, 0);
         } else if (distance > 9.0){
             coffeeProgressBar.visibility = View.VISIBLE
-            setProgressBarPercentage(coffeeProgressBar, 10);
+            setProgressBarPercentage(coffeeProgressBar, 20);
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.RED))
         }else if (distance > 8.0){
             coffeeProgressBar.visibility = View.VISIBLE
-            setProgressBarPercentage(coffeeProgressBar, 20);
+            setProgressBarPercentage(coffeeProgressBar, 30);
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.RED))
         }else if (distance > 7.0){
             coffeeProgressBar.visibility = View.VISIBLE
-            setProgressBarPercentage(coffeeProgressBar, 30);
+            setProgressBarPercentage(coffeeProgressBar, 40);
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.RED))
         }else if (distance > 6.0){
             coffeeProgressBar.visibility = View.VISIBLE
-            coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.RED))
-            setProgressBarPercentage(coffeeProgressBar, 40);
+            coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.YELLOW))
+            setProgressBarPercentage(coffeeProgressBar, 50);
         }else if (distance > 5.0){
             coffeeProgressBar.visibility = View.VISIBLE
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.YELLOW))
-            setProgressBarPercentage(coffeeProgressBar, 50);
+            setProgressBarPercentage(coffeeProgressBar, 60);
         }else if (distance > 4.0){
             coffeeProgressBar.visibility = View.VISIBLE
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.YELLOW))
-            setProgressBarPercentage(coffeeProgressBar, 60);
-        }else if (distance > 3.0){
-            coffeeProgressBar.visibility = View.VISIBLE
-            coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.YELLOW))
             setProgressBarPercentage(coffeeProgressBar, 70);
-        }else if (distance > 2.0){
+        }else if (distance > 3.0){
             coffeeProgressBar.visibility = View.VISIBLE
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.GREEN))
             setProgressBarPercentage(coffeeProgressBar, 80);
-        }else if (distance > 1.0){
+        }else if (distance > 2.0){
             coffeeProgressBar.visibility = View.VISIBLE
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.GREEN))
             setProgressBarPercentage(coffeeProgressBar, 90);
+        }else if (distance > 1.0){
+            coffeeProgressBar.visibility = View.VISIBLE
+            coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.GREEN))
+            setProgressBarPercentage(coffeeProgressBar, 95);
         }else if (distance > 0.0){
             coffeeProgressBar.visibility = View.VISIBLE
             coffeeProgressBar.setProgressTintList(ColorStateList.valueOf(Color.GREEN))
