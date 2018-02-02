@@ -20,9 +20,8 @@ import org.altbeacon.beacon.*
 import kotlinx.android.synthetic.main.activity_main.*
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RangeNotifier
-
-
-
+import android.app.NotificationManager
+import android.content.Context
 
 
 class MainActivity : AppCompatActivity(), BeaconConsumer {
@@ -108,13 +107,20 @@ class MainActivity : AppCompatActivity(), BeaconConsumer {
 
     fun updateDistance(distance: Double){
 
-        if(distance < 2.0 && !coffeeAlertDisplayed){
+        if(distance < 3.0 && !coffeeAlertDisplayed){
             coffeeAlertDisplayed = true;
             val noti = NotificationCompat.Builder(this)
                     .setContentTitle("FREE COFFEE")
                     .setContentText("You lucky thing - you've won a free coffee. Press the button on the machine for a delicious cup of Joe (but do put a cup in place first).")
                     .setSmallIcon(R.drawable.ic_local_cafe_black_24dp)
                     .build()
+
+            // Sets an ID for the notification
+            val mNotificationId = 1
+            // Gets an instance of the NotificationManager service
+            val mNotifyMgr = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            // Builds the notification and issues it.
+            mNotifyMgr.notify(mNotificationId, noti)
         }
 
         if(distance > 10.0){
